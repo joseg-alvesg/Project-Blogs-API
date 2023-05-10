@@ -1,20 +1,21 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
-  const Categories = sequelize.define('Categories', {
+  const category = sequelize.define('Category', {
+    id: DataTypes.INTEGER,
     name: DataTypes.STRING,
   }, { timestamps: false })
   
 
-  Categories.associate = (models) => {
-    Categories.hasMany(models.Blog_Post, {
+  category.associate = (models) => {
+    category.hasMany(models.Blog_Post, {
       foreignKey: 'id',
       as: 'blog_posts',
     })
-    Categories.hasMany(models.User, {
+    category.hasMany(models.User, {
       foreignKey: 'id',
       as: 'users',
     })
   }
   
-  return Categories;
+  return category;
 };
