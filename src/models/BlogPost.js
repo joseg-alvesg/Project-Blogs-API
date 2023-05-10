@@ -1,7 +1,8 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
-  const Blog_Posts = sequelize.define('blog_posts', {
+  const BlogPost = sequelize.define('BlogPost', {
     id: DataTypes.INTEGER,
+    userId: DataTypes.INTEGER,
     title: DataTypes.STRING,
     content: DataTypes.STRING,
     published: DataTypes.DATE,
@@ -9,14 +10,15 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     underscored: true,
     timestamps: false,
+    tablename: 'blog_posts',
   })  
 
-  Blog_Posts.associate = (models) => {
-    Blog_Posts.belongsTo(models.User, {
+  BlogPost.associate = (models) => {
+    BlogPost.belongsTo(models.User, {
       foreignKey: 'userId',
       as: 'users'
     })
   }
 
-  return Blog_Posts;
+  return BlogPost;
 };
