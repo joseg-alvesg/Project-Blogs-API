@@ -10,6 +10,8 @@ module.exports = {
       },
       title: {type: Sequelize.STRING},
       content: {type: Sequelize.STRING},
+      published: {type: Sequelize.DATE, allowNull: false},
+      updated: {type: Sequelize.DATE},
       userId: {
         type: Sequelize.INTEGER,
         field: 'user_id',
