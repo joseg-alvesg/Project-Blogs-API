@@ -2,7 +2,7 @@ const { userService } = require('../services');
 const { tokenHelper } = require('../utils');
 
 const login = async (req, res) => {
-  const { email, password } = req.body;
+  const { email } = req.body;
 
   const emailExists = await userService.login(email);
   console.log(emailExists);
