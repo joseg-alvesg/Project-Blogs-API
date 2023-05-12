@@ -13,5 +13,6 @@ router.post(
   userMiddlewares.emailExists,
   userControler.createUser,
 );
+router.get('/:id', tokenValidation.tokenValidation, userControler.findById);
 
 module.exports = router;
