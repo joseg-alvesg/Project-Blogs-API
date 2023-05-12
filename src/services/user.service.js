@@ -8,7 +8,10 @@ const login = async (email) => {
 const createUser = async ({ displayName, email, password, image }) =>
   User.create({ displayName, email, password, image });
 
+const findAll = async () => User.findAll({ attributes: { exclude: ['password'] } });
+
 module.exports = {
   login,
   createUser,
+  findAll,
 };
