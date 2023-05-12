@@ -5,6 +5,10 @@ const login = async (email) => {
   return emailExists;
 };
 
+const createUser = async ({ displayName, email, password, image }) =>
+  User.create({ displayName, email, password, image });
+
 module.exports = {
   login,
+  createUser,
 };
