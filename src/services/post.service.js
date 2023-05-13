@@ -17,7 +17,7 @@ const insert = async ({ title, content, categoryIds }, user) => {
   }).then((a) => a.dataValues.id);
 
   const data = await BlogPost.create({ title, content, userId });
-  const postCategories = await Promise.all(
+  await Promise.all(
     categoryIds.map((categoryId) => insertCategory(data.dataValues.id, categoryId)),
   );
   return data;
