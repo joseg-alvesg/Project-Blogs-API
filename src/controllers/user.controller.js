@@ -3,9 +3,8 @@ const { tokenGenerate } = require('../utils/tokenHelpers');
 
 const createUser = async (req, res) => {
   const user = req.body;
-  await userService.createUser(user);
-
-  const token = tokenGenerate(user.email);
+  const data = await userService.createUser(user);
+  const token = tokenGenerate({ email: user.email, id: data.dataValues.id });
 
   return res.status(201).json({ token });
 };
