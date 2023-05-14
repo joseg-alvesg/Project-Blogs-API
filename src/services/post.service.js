@@ -37,9 +37,8 @@ const findAll = async () => {
   return data;
 };
 
-const findById = async (id, _token) => {
-  const data = await BlogPost.findOne({
-    where: { id },
+const findById = async (id) => {
+  const data = await BlogPost.findByPk(id, {
     include: [
       { model: User, as: 'user', attributes: { exclude: ['password'] } },
       { model: Category, as: 'categories', through: { attributes: [] } },

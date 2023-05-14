@@ -18,7 +18,8 @@ const findAll = async (_req, res) => {
 };
 
 const findById = async (req, res) => {
-  const data = await blogPost.findById(Number(req.params.id));
+  const { id } = req.params;
+  const data = await blogPost.findById(+id);
   if (!data) return res.status(404).json({ message: 'Post does not exist' });
   return res.status(200).json(data);
 };
