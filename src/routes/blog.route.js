@@ -18,5 +18,12 @@ router.post(
   blogPostValidation.categoryIdsValid,
   blogPostController.insert,
 );
+router.put(
+  '/:id',
+  tokenValidation.tokenValidation,
+  blogPostValidation.titleValid,
+  blogPostValidation.contentValid,
+  blogPostController.update,
+);
 
 module.exports = router;
