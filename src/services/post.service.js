@@ -8,6 +8,11 @@ const findUserId = async (token) => {
   }).then((a) => a.dataValues);
 };
 
+const postOwner = async (id, token) => findUserId(token).then(async (user) => {
+  const post = await BlogPost.findByPk(id);
+  return post.dataValues.userId === user.id;
+});
+
 const insertCategory = async (postId, categoryId) =>
   PostCategory.create({ postId, categoryId });
 
@@ -21,7 +26,8 @@ const insert = async ({ title, content, categoryIds }, user) => {
 
   const data = await BlogPost.create({ title, content, userId });
   await Promise.all(
-    categoryIds.map((categoryId) => insertCategory(data.dataValues.id, categoryId)),
+    categoryIds.map((categoryId) =>
+      insertCategory(data.dataValues.id, categoryId)),
   );
   return data;
 };
@@ -32,7 +38,7 @@ const findAll = async () => {
       { model: User, as: 'user', attributes: { exclude: ['password'] } },
       { model: Category, as: 'categories', through: { attributes: [] } },
     ],
-  }); 
+  });
 
   return data;
 };
@@ -47,8 +53,20 @@ const findById = async (id) => {
   return data;
 };
 
+const update = async (id, { title, content }, auth) => {
+  const owner = await postOwner(id, auth);
+  if (!owner) return undefined;
+  await BlogPost.update(
+    { title, content },
+    { where: { id } /* , returning: true, plain: true  */ }, // * pesquisar mais sobre returning, achei que traria o objeto
+  );
+  const data = await findById(id);
+  return data;
+};
+
 module.exports = {
   insert,
   findAll,
   findById,
+  update,
 };
