@@ -17,7 +17,7 @@ module.exports = (sequelize, DataTypes) => {
     BlogPost.belongsTo(models.User, {
       foreignKey: 'userId',
       timestamps: false, 
-      as: 'users'
+      as: 'user'
     })
   }
 

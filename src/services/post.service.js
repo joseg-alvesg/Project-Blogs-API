@@ -1,6 +1,5 @@
 const jwt = require('jsonwebtoken');
-const { User } = require('../models');
-const { BlogPost, Category, PostCategory } = require('../models');
+const { User, BlogPost, Category, PostCategory } = require('../models');
 
 const insertCategory = async (postId, categoryId) =>
   PostCategory.create({ postId, categoryId });
@@ -24,22 +23,14 @@ const insert = async ({ title, content, categoryIds }, user) => {
 };
 
 const findAll = async () => {
-  const data = await BlogPost.findAll(); 
-  const dataWhithUser = await Promise.all( 
-    data.map(async (post) => {
-      const { dataValues } = await User.findByPk(post.dataValues.userId, {
-        attributes: { exclude: ['password'] },
-      });
-      return { ...post.dataValues, user: dataValues };
-    }), 
-  );
-  const dataWhithCategorie = await Promise.all(
-    dataWhithUser.map(async (post) => {
-      const { dataValues } = await Category.findByPk(post.id);
-      return { ...post, categories: [dataValues] };
-    }),
-  );
-  return dataWhithCategorie;
+  const data = await BlogPost.findAll({
+    include: [
+      { model: User, as: 'user', attributes: { exclude: ['password'] } },
+      { model: Category, as: 'categories', through: { attributes: [] } },
+    ],
+  }); 
+
+  return data;
 };
 
 module.exports = {
