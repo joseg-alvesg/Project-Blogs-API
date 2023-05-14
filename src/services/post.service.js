@@ -23,6 +23,26 @@ const insert = async ({ title, content, categoryIds }, user) => {
   return data;
 };
 
+const findAll = async () => {
+  const data = await BlogPost.findAll(); 
+  const dataWhithUser = await Promise.all( 
+    data.map(async (post) => {
+      const { dataValues } = await User.findByPk(post.dataValues.userId, {
+        attributes: { exclude: ['password'] },
+      });
+      return { ...post.dataValues, user: dataValues };
+    }), 
+  );
+  const dataWhithCategorie = await Promise.all(
+    dataWhithUser.map(async (post) => {
+      const { dataValues } = await Category.findByPk(post.id);
+      return { ...post, categories: [dataValues] };
+    }),
+  );
+  return dataWhithCategorie;
+};
+
 module.exports = {
   insert,
+  findAll,
 };

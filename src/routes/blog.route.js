@@ -4,6 +4,7 @@ const { tokenValidation, blogPostValidation } = require('../middlewares');
 
 const router = express.Router();
 
+router.get('/', tokenValidation.tokenValidation, blogPostController.findAll);
 router.post(
   '/',
   tokenValidation.tokenValidation,

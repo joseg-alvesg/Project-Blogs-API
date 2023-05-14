@@ -8,6 +8,12 @@ const insert = async (req, res) => {
   res.status(201).json(data);
 };
 
+const findAll = async (_req, res) => {
+  const data = await blogPost.findAll();
+  res.status(200).json(data);
+};
+
 module.exports = {
   insert,
+  findAll,
 };
