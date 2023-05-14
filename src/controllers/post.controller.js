@@ -24,8 +24,17 @@ const findById = async (req, res) => {
   return res.status(200).json(data);
 };
 
+const update = async (req, res) => {
+  const { id } = req.params;
+  const { body, headers: { authorization: auth } } = req;
+  const data = await blogPost.update(+id, body, auth);
+  if (!data) return res.status(401).json({ message: 'Unauthorized user' });
+  res.status(200).json(data);
+};
+
 module.exports = {
   insert,
   findAll,
   findById,
+  update, 
 };
