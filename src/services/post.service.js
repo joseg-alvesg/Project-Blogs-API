@@ -1,6 +1,13 @@
 const jwt = require('jsonwebtoken');
 const { User, BlogPost, Category, PostCategory } = require('../models');
 
+const findUserId = async (token) => {
+  const decoded = jwt.decode(token, { complete: true });
+  return User.findOne({
+    where: { email: decoded.payload.email },
+  }).then((a) => a.dataValues);
+};
+
 const insertCategory = async (postId, categoryId) =>
   PostCategory.create({ postId, categoryId });
 
@@ -10,10 +17,7 @@ const insert = async ({ title, content, categoryIds }, user) => {
   ).then((c) => c.every((id) => id));
   if (!categories) return undefined;
 
-  const decoded = jwt.decode(user, { complete: true });
-  const userId = await User.findOne({
-    where: { email: decoded.payload.email },
-  }).then((a) => a.dataValues.id);
+  const { id: userId } = await findUserId(user);
 
   const data = await BlogPost.create({ title, content, userId });
   await Promise.all(
@@ -33,7 +37,19 @@ const findAll = async () => {
   return data;
 };
 
+const findById = async (id, _token) => {
+  const data = await BlogPost.findOne({
+    where: { id },
+    include: [
+      { model: User, as: 'user', attributes: { exclude: ['password'] } },
+      { model: Category, as: 'categories', through: { attributes: [] } },
+    ],
+  });
+  return data;
+};
+
 module.exports = {
   insert,
   findAll,
+  findById,
 };
