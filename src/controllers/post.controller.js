@@ -4,16 +4,27 @@ const insert = async (req, res) => {
   const { body, headers } = req;
   const user = headers.authorization;
   const data = await blogPost.insert(body, user);
-  if (!data) return res.status(400).json({ message: 'one or more "categoryIds" not found' });
-  res.status(201).json(data);
+  if (!data) {
+    return res
+      .status(400)
+      .json({ message: 'one or more "categoryIds" not found' });
+  }
+  return res.status(201).json(data);
 };
 
 const findAll = async (_req, res) => {
   const data = await blogPost.findAll();
-  res.status(200).json(data);
+  return res.status(200).json(data);
+};
+
+const findById = async (req, res) => {
+  const data = await blogPost.findById(Number(req.params.id));
+  if (!data) return res.status(404).json({ message: 'Post does not exist' });
+  return res.status(200).json(data);
 };
 
 module.exports = {
   insert,
   findAll,
+  findById,
 };
