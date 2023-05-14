@@ -22,6 +22,7 @@ module.exports = (sequelize, DataTypes) => {
       as: 'categories',
       through: PostCategory,
       foreignKey: 'postId',
+      onDelete: 'CASCADE',
     })
     models.Category.belongsToMany(models.BlogPost, {
       as: 'categoryId',
