@@ -72,7 +72,6 @@ const deleteById = async (id, auth) => {
   const owner = await postOwner(id, auth);
   if (!owner) return { type: 'UNAUTHORIZED', message: 'Unauthorized user' };
   const deleted = await BlogPost.destroy({ where: { id } });
-  console.log('delete aqui', deleted);
   return deleted;
 };
 
