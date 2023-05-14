@@ -8,6 +8,8 @@ const findUserId = async (token) => {
   }).then((a) => a.dataValues);
 };
 
+const findSimpleId = async (id) => BlogPost.findByPk(id);
+
 const postOwner = async (id, token) => findUserId(token).then(async (user) => {
   const post = await BlogPost.findByPk(id);
   return post.dataValues.userId === user.id;
@@ -64,9 +66,20 @@ const update = async (id, { title, content }, auth) => {
   return data;
 };
 
+const deleteById = async (id, auth) => {
+  const idExists = await findSimpleId(id);
+  if (!idExists) return { type: 'NOT_FOUND', message: 'Post does not exist' };
+  const owner = await postOwner(id, auth);
+  if (!owner) return { type: 'UNAUTHORIZED', message: 'Unauthorized user' };
+  const deleted = await BlogPost.destroy({ where: { id } });
+  console.log('delete aqui', deleted);
+  return deleted;
+};
+
 module.exports = {
   insert,
   findAll,
   findById,
   update,
+  deleteById,
 };

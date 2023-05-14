@@ -29,7 +29,16 @@ const update = async (req, res) => {
   const { body, headers: { authorization: auth } } = req;
   const data = await blogPost.update(+id, body, auth);
   if (!data) return res.status(401).json({ message: 'Unauthorized user' });
-  res.status(200).json(data);
+  return res.status(200).json(data);
+};
+
+const deleteById = async (req, res) => {
+  const { id } = req.params;
+  const { authorization: auth } = req.headers;
+  const { type, message } = await blogPost.deleteById(+id, auth);
+  if (type === 'UNAUTHORIZED') return res.status(401).json({ message });
+  if (type === 'NOT_FOUND') return res.status(404).json({ message });
+  return res.status(204).json(message);
 };
 
 module.exports = {
@@ -37,4 +46,5 @@ module.exports = {
   findAll,
   findById,
   update, 
+  deleteById,
 };
