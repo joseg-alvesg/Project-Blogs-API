@@ -10,7 +10,7 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     underscored: true,
     timestamps: false,
-    tablename: 'blog_posts',
+    tableName: 'blog_posts',
   })  
 
   BlogPost.associate = (models) => {
@@ -18,7 +18,7 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: 'userId',
       timestamps: false, 
       as: 'user',
-      onDelete: 'CASCADE,'
+      onDelete: 'CASCADE',
     })
   }
 

@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken');
+const { Op } = require('sequelize');
 const { User, BlogPost, Category, PostCategory } = require('../models');
 
 const findUserId = async (token) => {
@@ -10,10 +11,11 @@ const findUserId = async (token) => {
 
 const findSimpleId = async (id) => BlogPost.findByPk(id);
 
-const postOwner = async (id, token) => findUserId(token).then(async (user) => {
-  const post = await BlogPost.findByPk(id);
-  return post.dataValues.userId === user.id;
-});
+const postOwner = async (id, token) =>
+  findUserId(token).then(async (user) => {
+    const post = await BlogPost.findByPk(id);
+    return post.dataValues.userId === user.id;
+  });
 
 const insertCategory = async (postId, categoryId) =>
   PostCategory.create({ postId, categoryId });
@@ -75,10 +77,28 @@ const deleteById = async (id, auth) => {
   return deleted;
 };
 
+const searchTerm = async (q) => {
+  const data = await BlogPost.findAll({
+    where: {
+      [Op.or]: [
+        { title: { [Op.like]: `%${q}%` } },
+        { content: { [Op.like]: `%${q}%` } },
+      ],
+    },
+    include: [
+      { model: User, as: 'user', attributes: { exclude: ['password'] } },
+      { model: Category, as: 'categories' },
+    ],
+    order: [['published', 'DESC']],
+  });
+  return data;
+};
+
 module.exports = {
   insert,
   findAll,
   findById,
   update,
   deleteById,
+  searchTerm,
 };
