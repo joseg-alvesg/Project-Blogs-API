@@ -12,9 +12,14 @@ const findAll = async () => User.findAll({ attributes: { exclude: ['password'] }
 
 const findById = async (id) => User.findByPk(id, { attributes: { exclude: ['password'] } });
 
+const deleteUser = async (email) => { 
+  await User.destroy({ where: { email } });
+};
+
 module.exports = {
   login,
   createUser,
   findAll,
   findById,
+  deleteUser,
 };
