@@ -11,7 +11,6 @@ app.get('/', (_request, response) => {
 });
 
 app.use(express.json());
-console.log(arroz)
 
 app.use('/login', loginRouter);
 app.use('/user', userRouter);
