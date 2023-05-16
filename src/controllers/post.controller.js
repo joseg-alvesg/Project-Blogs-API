@@ -43,7 +43,6 @@ const deleteById = async (req, res) => {
 
 const searchTerm = async (req, res) => {
   const { q } = req.query;
-  console.log('MAIS UM LOG PRA TESTAR', q);
   const data = await blogPost.searchTerm(q);
   return res.status(200).json(data);
 };
